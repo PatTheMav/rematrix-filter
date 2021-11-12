@@ -1,36 +1,20 @@
-cmake_minimum_required(VERSION 3.5)
+cmake_minimum_required(VERSION 3.16)
 
 project(rematrix-filter)
 
-########################################
-# find libobs                                                          #
-########################################
-#include(external/ObsPluginHelpers.cmake)
-#include(external/FindLibObs.cmake)
-#find_package(LibObs REQUIRED)
+set(MACOSX_PLUGIN_GUI_IDENTIFIER "com.andersama.rematrix-filter")
+set(MACOSX_PLUGIN_BUNDLE_VERSION "0.0.1")
+set(MACOSX_PLUGIN_SHORT_VERSION_STRING "1")
 
-include_directories(
-	/
-#	"${LIBOBS_INCLUDE_DIR}/../UI/obs-frontend-api"
-)
+find_package(libobs REQUIRED)
+include(external/ObsPluginHelpers.cmake)
 
-#set(OBS_FRONTEND_LIB "OBS_FRONTEND_LIB-NOTFOUND" CACHE FILEPATH "OBS frontend library")
-#if(OBS_FRONTEND_LIB EQUAL "OBS_FRONTEND_LIB-NOTFOUND")
-#	message(FATAL_ERROR "Could not find OBS Frontend API\'s library !")
-#endif()
+add_library(rematrix-filter MODULE)
 
-set(rematrix-filter_SOURCES
-	rematrix-filter.cpp
-)
-
-add_library(rematrix-filter MODULE
-	${rematrix-filter_SOURCES}
-)
+target_sources(rematrix-filter
+	PRIVATE rematrix-filter.cpp)
 
 target_link_libraries(rematrix-filter
-	libobs
-#	"${OBS_FRONTEND_LIB}"
-)
+	PRIVATE OBS::libobs)
 
-install_obs_plugin_with_data(rematrix-filter data)
-#install_external_plugin_with_data(rematrix-filter data)
+setup_plugin_target(rematrix-filter)
